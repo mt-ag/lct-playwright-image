@@ -1,0 +1,6 @@
+{
+  "[shellscript]": {
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": []
+  }
+}
