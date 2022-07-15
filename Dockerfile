@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/playwright:v1.23.3-focal
 
-#LABEL org.opencontainers.image.source https://github.com/mt-ag/docker-codecept-multimocha-playwright
+LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-image
 
 RUN mkdir /app && \
   mkdir /app/workdir && \
