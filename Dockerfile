@@ -11,6 +11,7 @@ COPY ./files /app/workdir
 RUN cd /app/workdir && \
   yarn install && \
   yarn playwright install && \
+  chown -R pwuser /app && \
   chmod +x /app/workdir/entrypoint.sh
 
 WORKDIR /app/workdir
