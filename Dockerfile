@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.23.3-focal
+FROM mcr.microsoft.com/playwright:v1.25.1-jammy
 
 LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-image
 
@@ -16,5 +16,4 @@ RUN cd /app/workdir && \
 
 WORKDIR /app/workdir
 
-# Run tests
 CMD ["bash", "entrypoint.sh"]
