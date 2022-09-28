@@ -13,3 +13,4 @@ mv /app/workdir/screenshots/* /app/volume/output/screenshots/
 ## move traces
 mv /app/workdir/test-results/* /app/volume/output/traces/
 
+chmod -R 777 /app/volume/output
