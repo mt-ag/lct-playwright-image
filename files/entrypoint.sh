@@ -9,8 +9,15 @@ mkdir -p /app/volume/output/screenshots/
 mkdir -p /app/volume/output/traces/
 
 ## move screenshots
-mv /app/workdir/screenshots/* /app/volume/output/screenshots/
+if [[ -d /app/workdir/screenshots/ ]]
+then
+  mv /app/workdir/screenshots/* /app/volume/output/screenshots/
+fi
+
 ## move traces
-mv /app/workdir/test-results/* /app/volume/output/traces/
+if [[ -d /app/workdir/test-results/ ]]
+then
+  mv /app/workdir/test-results/* /app/volume/output/traces/
+fi
 
 chmod -R 777 /app/volume/output
