@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.25.1-jammy
+FROM mcr.microsoft.com/playwright:v1.27.1-jammy
 
 LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-image
 
