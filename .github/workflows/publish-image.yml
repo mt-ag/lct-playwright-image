@@ -17,10 +17,26 @@ env:
   IMAGE_NAME: lct-playwright-image
 
 jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test Docker Image
+        run: |
+          docker build . --file Dockerfile -t $IMAGE_NAME --cache-from ghcr.io/mt-ag/$IMAGE_NAME
+          ./run_tests.sh
+
   # Push image to GitHub Packages.
   # See also https://docs.github.com/en/actions/guides/publishing-docker-images
   push:
-    runs-on: ubuntu-latest
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-20.04
     if: github.event_name == 'push'
 
     steps:
