@@ -1,5 +1,7 @@
 #!/bin/bash
 cp -r /app/volume/* /app/workdir/
+## log playwright version
+echo "$(cat /app/workdir/package.json | grep -oEi '@playwright/test\": \"([0-9.]+)\"')"
 /app/workdir/run.sh | tee output.log
 mkdir -p /app/volume/output
 cp /app/workdir/results.xml /app/volume/output/ || true
@@ -20,4 +22,4 @@ then
   [ "$(ls -A /app/workdir/test-results)" ] && mv /app/workdir/test-results/* /app/volume/output/traces/
 fi
 
-chmod -R 777 /app/volume/output
+chmod -R 777 /app/volume/output || true
