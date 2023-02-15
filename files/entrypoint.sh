@@ -22,4 +22,4 @@ then
   [ "$(ls -A /app/workdir/test-results)" ] && mv /app/workdir/test-results/* /app/volume/output/traces/
 fi
 
-chmod -R 777 /app/volume/output || true
+chmod -Rf 777 /app/volume/output || true
