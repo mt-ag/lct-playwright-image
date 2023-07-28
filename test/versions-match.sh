@@ -15,4 +15,6 @@ if [ "$DOCKERFILE_VERSION" = "$PACKAGE_JSON_VERSION" ]; then
     echo "Versions match: $DOCKERFILE_VERSION"
 else
     echo "Versions do not match. Dockerfile version: $DOCKERFILE_VERSION, package.json version: $PACKAGE_JSON_VERSION"
+    # Exit with error
+    exit 1
 fi
