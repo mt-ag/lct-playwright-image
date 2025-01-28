@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.44.1-focal
+FROM mcr.microsoft.com/playwright:v1.50.0-noble
 
 LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-image
 
