@@ -5,7 +5,7 @@ DOCKERFILE_PATH="./Dockerfile"
 PACKAGE_JSON_PATH="./files/package.json"
 
 # Extract version from Dockerfile
-DOCKERFILE_VERSION=$(grep '^FROM' $DOCKERFILE_PATH | awk -F':' '{print $2}' | sed 's/-focal//' | sed 's/v//')
+DOCKERFILE_VERSION=$(grep '^FROM' $DOCKERFILE_PATH | awk -F':' '{print $2}' | sed 's/-noble//' | sed 's/v//')
 
 # Extract version from package.json
 PACKAGE_JSON_VERSION=$(awk -F'"' '/@playwright\/test/ {print $4}' $PACKAGE_JSON_PATH)
