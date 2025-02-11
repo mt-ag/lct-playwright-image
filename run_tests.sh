@@ -3,7 +3,7 @@ IMAGE_NAME="lct-playwright-image:latest"
 function prepare_test() {
 
   rm -rf ./test/live || true
-  mkdir -p ./test/live
+  mkdir -p ./test/live/tests
 
   cp ./test/static/lctReporter.js ./test/live
   cp ./test/static/playwright.config.js ./test/live
