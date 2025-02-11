@@ -6,6 +6,8 @@ ARG TZ=Europe/Berlin
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
+ENV NODE_PATH=/app/workdir/node_modules
+
 LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-image
 
 RUN apt-get update && \
@@ -19,13 +21,14 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     groupadd pwuser && \
     useradd -g pwuser pwuser && \
-    mkdir -p /app/workdir
+    mkdir -p /app/workdir && \
+    mkdir -p /app/volume
 
-RUN cd /app/workdir && \
+RUN cd /app && \
     npm install -y @playwright/test && \
     npx -y playwright@1.50.1 install --with-deps && \
-    chown pwuser:pwuser /app/workdir && \
-    chmod -R 777 /app/workdir
+    chown pwuser:pwuser /app && \
+    chmod -R 777 /app
 
 WORKDIR /app/workdir
 
