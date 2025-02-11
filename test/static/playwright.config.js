@@ -26,6 +26,8 @@ const config = {
   retries: 2,
   /* Opt out of parallel tests on CI. */
   workers: 1,
+  testDir: "./tests",
+  outputDir: "./output",
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [["./lctReporter.js"], ["junit", { outputFile: "results.xml" }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */

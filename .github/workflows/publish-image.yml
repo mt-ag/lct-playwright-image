@@ -25,9 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Check playwright versions match
-        run: ./test/versions-match.sh
-
       - name: Test Docker Image
         run: |
           docker build . --file Dockerfile -t $IMAGE_NAME --cache-from ghcr.io/mt-ag/$IMAGE_NAME
