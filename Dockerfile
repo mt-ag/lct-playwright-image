@@ -1,19 +1,16 @@
-FROM mcr.microsoft.com/playwright:v1.50.0-noble
+FROM mcr.microsoft.com/playwright:v1.50.1-noble
 
 LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-image
 
-RUN mkdir /app && \
-  mkdir /app/workdir && \
-  mkdir /app/volume
-
-COPY ./files /app/workdir
-
-RUN cd /app/workdir && \
-  yarn install && \
-  yarn playwright install && \
-  chown -R pwuser /app && \
-  chmod +x /app/workdir/entrypoint.sh
+# Playwright Installation
+RUN mkdir -p /app/workdir && \
+    cd /app && \
+    npm config set --global update-notifier false && \
+    npm install -y @playwright/test && \
+    npx -y playwright@1.50.1 install --with-deps && \
+    chown pwuser:pwuser /app && \
+    chmod -R 777 /app
 
 WORKDIR /app/workdir
 
-CMD ["bash", "entrypoint.sh"]
+ENTRYPOINT ["npx", "playwright", "test", "test.spec.js"]

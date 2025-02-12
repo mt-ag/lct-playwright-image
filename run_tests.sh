@@ -1,14 +1,13 @@
 IMAGE_NAME="lct-playwright-image:latest"
 
-function copy_test_files() {
-  FOLDER=$1
+function prepare_test() {
 
-  rm -rf /test/$FOLDER/output/ || true
-  rm ./test/$FOLDER/lctReporter.js || true
-  rm ./test/$FOLDER/playwright.config.js || true
+  rm -rf ./test/live || true
+  mkdir -p ./test/live/tests
 
-  cp ./test/lctReporter.js ./test/$FOLDER
-  cp ./test/playwright.config.js ./test/$FOLDER
+  cp ./test/static/lctReporter.js ./test/live
+  cp ./test/static/playwright.config.js ./test/live
+  cp ./test/static/test.spec.js ./test/live/tests
 }
 
 function single_file_exists() {
@@ -22,29 +21,34 @@ function single_file_exists() {
   fi
 }
 
-function test_result_files_exist() {
-  FOLDER=$1
+function check_result_and_cleanup() {
+  single_file_exists "./test/live/results.xml"
+  rm ./test/live/results.xml || true
+  single_file_exists "./test/live/example.png"
+  rm ./test/live/example.png || true
+  rm -rf ./test/live/output || true
+}
 
-  single_file_exists "./test/$FOLDER/output/results.xml"
-  single_file_exists "./test/$FOLDER/output/output.log"
+function run_container() {
+  BROWSER=$1
+  docker run -u pwuser --rm --ipc=host -v $(pwd)/test/live:/app/workdir $IMAGE_NAME "--project=$BROWSER"
 }
 
 echo "Launching Test Suite..."
 
-echo "Giving access to all files..."
-chmod -R 777 ./test/*
+prepare_test
 
 echo "Starting chromium test..."
-copy_test_files "chromium"
-docker run --rm --ipc=host -v $(pwd)/test/chromium:/app/volume $IMAGE_NAME
-test_result_files_exist "chromium"
+run_container "chromium"
+echo "Verifying chromium test results..."
+check_result_and_cleanup
 
 echo "Starting firefox test..."
-copy_test_files "firefox"
-docker run --rm --ipc=host -v $(pwd)/test/firefox:/app/volume $IMAGE_NAME
-test_result_files_exist "firefox"
+run_container "firefox"
+echo "Verifying firefox test results..."
+check_result_and_cleanup
 
 echo "Starting webkit test..."
-copy_test_files "webkit"
-docker run --rm --ipc=host -v $(pwd)/test/webkit:/app/volume $IMAGE_NAME
-test_result_files_exist "webkit"
+run_container "webkit"
+echo "Verifying webkit test results..."
+check_result_and_cleanup
