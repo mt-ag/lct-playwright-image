@@ -12,11 +12,10 @@
 ## Sample folder structure for mounted folder
 
 
-
 ## Building the Image
 
-`docker build . --file Dockerfile -t lct-playwright-image`
+`docker build . --file Dockerfile -t lct-playwright-image:local`
 
 ## Testing the container
 
-`docker run --rm --ipc=host -v $(pwd)/test/local:/app/workdir lct-playwright-image "--project=chromium"`
+`docker run -u "$(id -u):$(id -g)" --rm --ipc=host -v $(pwd)/test/local:/app/workdir lct-playwright-image:local "--project=chromium"`
