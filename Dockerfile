@@ -21,9 +21,12 @@ RUN apt-get update && \
     npm config set --global update-notifier false && \
     rm -rf /var/lib/apt/lists/*
 
+ARG PW_USER=lct
+ARG PW_GROUP=lct
+    
 # Directory and User Preparation
-RUN groupadd pwuser && \
-    useradd -g pwuser pwuser && \
+RUN groupadd $PW_GROUP && \
+    useradd -g $PW_GROUP $PW_USER && \
     mkdir -p /app/workdir && \
     mkdir /pw-browsers
 
@@ -31,7 +34,7 @@ RUN groupadd pwuser && \
 RUN cd /app && \
     npm install -y @playwright/test && \
     npx -y playwright@1.50.1 install --with-deps && \
-    chown pwuser:pwuser /app && \
+    chown $PW_USER:$PW_GROUP /app && \
     chmod -R 777 /app && \
     chmod -R 777 /pw-browsers
 
