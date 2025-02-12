@@ -31,7 +31,7 @@ function check_result_and_cleanup() {
 
 function run_container() {
   BROWSER=$1
-  docker run -u "$(id -u):$(id -g)" --rm --ipc=host -v $(pwd)/test/live:/app/workdir $IMAGE_NAME "--project=$BROWSER"
+  docker run -u pwuser --rm --ipc=host -v $(pwd)/test/live:/app/workdir $IMAGE_NAME "--project=$BROWSER"
 }
 
 echo "Launching Test Suite..."
