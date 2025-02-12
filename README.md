@@ -11,11 +11,16 @@
 
 ## Sample folder structure for mounted folder
 
-
-## Building the Image
+## Building the Image locally
 
 `docker build . --file Dockerfile -t lct-playwright-image:local`
 
-## Testing the container
+## Testing the container locally
 
-`docker run -u "$(id -u):$(id -g)" --rm --ipc=host -v $(pwd)/test/local:/app/workdir lct-playwright-image:local "--project=chromium"`
+```sh
+# Run on Top Level directory of repo
+rm -rf ./test/local/results.xml ./test/local/example.png ./test/local/output
+docker run -u pwuser --rm --ipc=host -v ./test/local:/app/workdir lct-playwright-image:local "--project=chromium"
+# Verify if files exist
+ls -la ./test/local
+```
