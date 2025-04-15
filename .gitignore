@@ -1,3 +1,4 @@
-/test/*/output
-/test/*/results.xml
-/test/*/*.png
+/test/output/*.json
+/test/results.xml
+/test/traces/*
+/test/screenshots/*.png

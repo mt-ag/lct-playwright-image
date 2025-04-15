@@ -1,19 +1,34 @@
-IMAGE_NAME="lct-playwright-image:latest"
+EXECUTION_TYPE=$1
+IMAGE_NAME="lct-playwright-image"
+
+if [ "$EXECUTION_TYPE" != "local" ] && [ "$EXECUTION_TYPE" != "latest" ]; then
+  echo "argument must be either \"local\" or \"latest\"."
+  exit 126
+fi
+
+function build_image_locally() {
+  docker build --no-cache . --file Dockerfile -t "${IMAGE_NAME}:${EXECUTION_TYPE}"
+}
 
 function prepare_test() {
+  rm -f ./test/results.xml
+  rm -f ./test/screenshots/example.png
+}
 
-  rm -rf ./test/live || true
-  mkdir -p ./test/live/tests
-
-  cp ./test/static/lctReporter.js ./test/live
-  cp ./test/static/playwright.config.js ./test/live
-  cp ./test/static/test.spec.js ./test/live/tests
+function verify_initial_folderstructure_and_files() {
+  single_directory_exists  "./test/output"
+  single_directory_exists  "./test/screenshots"
+  single_directory_exists  "./test/traces"
+  single_directory_exists  "./test/tests"
+  single_file_exists       "./test/tests/test.spec.js"
+  single_file_exists       "./test/playwright.config.js"
+  single_file_exists       "./test/lctReporter.js"
 }
 
 function single_file_exists() {
   FILE=$1
 
-  if [ ! -f "$FILE" ]; then
+  if [ ! -L "$FILE" ] && [ ! -f "$FILE" ]; then
     echo "$FILE not found."
     exit 1
   else
@@ -21,34 +36,43 @@ function single_file_exists() {
   fi
 }
 
-function check_result_and_cleanup() {
-  single_file_exists "./test/live/results.xml"
-  rm ./test/live/results.xml || true
-  single_file_exists "./test/live/example.png"
-  rm ./test/live/example.png || true
-  rm -rf ./test/live/output || true
+function single_directory_exists() {
+  DIRECTORY=$1
+
+  if [ ! -L "$DIRECTORY" ] && [ ! -d "$DIRECTORY" ]; then
+    echo "$DIRECTORY not found."
+    exit 1
+  else
+    echo "$DIRECTORY found."
+  fi
+}
+
+function check_result() {
+  single_file_exists "./test/results.xml"
+  single_file_exists "./test/screenshots/example.png"
 }
 
 function run_container() {
-  BROWSER=$1
-  docker run -u pwuser --rm --ipc=host -v $(pwd)/test/live:/app/workdir $IMAGE_NAME "--project=$BROWSER"
+  docker run -u pwuser --rm --ipc=host -v ./test:/app/workdir "${IMAGE_NAME}:${EXECUTION_TYPE}"
 }
 
-echo "Launching Test Suite..."
+if [ "$EXECUTION_TYPE" = "local" ]; then
+  echo "Building Docker image locally..."
+  build_image_locally
+fi
+
+echo "Preparing environment..."
 
 prepare_test
 
-echo "Starting chromium test..."
-run_container "chromium"
-echo "Verifying chromium test results..."
-check_result_and_cleanup
+echo "Verifying initial folderstructure and files..."
 
-echo "Starting firefox test..."
-run_container "firefox"
-echo "Verifying firefox test results..."
-check_result_and_cleanup
+verify_initial_folderstructure_and_files
 
-echo "Starting webkit test..."
-run_container "webkit"
-echo "Verifying webkit test results..."
-check_result_and_cleanup
+echo "Launching tests in Docker container..."
+
+run_container
+
+echo "Checking test results and output files..."
+
+check_result
