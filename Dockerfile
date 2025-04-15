@@ -6,8 +6,8 @@ LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-im
 RUN mkdir -p /app/workdir && \
     cd /app && \
     npm config set --global update-notifier false && \
-    npm install -y @playwright/test && \
-    npx -y playwright@1.50.1 install --with-deps && \
+    npm install -y -D @playwright/test@1.50.1 && \
+    npx -y playwright install --with-deps && \
     chown pwuser:pwuser /app && \
     chmod -R 777 /app
 
