@@ -27,7 +27,6 @@ jobs:
 
       - name: Test Docker Image
         run: |
-          find . -type d | sort
           docker build . --file Dockerfile -t $IMAGE_NAME --cache-from ghcr.io/mt-ag/$IMAGE_NAME
           ./run_tests.sh latest
 
