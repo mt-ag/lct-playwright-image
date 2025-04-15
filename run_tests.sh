@@ -13,7 +13,13 @@ function build_image_locally() {
 
 function prepare_test() {
   rm -f "$CURRENT_DIR/test/results.xml"
-  rm -f "$CURRENT_DIR/test/screenshots/example.png"
+  rm -rf "$CURRENT_DIR/test/screenshots"
+  rm -rf "$CURRENT_DIR/test/traces"
+  rm -rf "$CURRENT_DIR/test/output"
+  
+  mkdir -p "$CURRENT_DIR/test/output"  
+  mkdir -p "$CURRENT_DIR/test/screenshots"
+  mkdir -p "$CURRENT_DIR/test/traces"
 }
 
 function verify_initial_folderstructure_and_files() {
@@ -24,6 +30,7 @@ function verify_initial_folderstructure_and_files() {
   single_file_exists       "$CURRENT_DIR/test/tests/test.spec.js"
   single_file_exists       "$CURRENT_DIR/test/playwright.config.js"
   single_file_exists       "$CURRENT_DIR/test/lctReporter.js"
+  single_file_exists       "$CURRENT_DIR/test/run.sh"
 }
 
 function single_file_exists() {
