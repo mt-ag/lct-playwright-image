@@ -1,16 +1,19 @@
-FROM mcr.microsoft.com/playwright:v1.50.1-noble
+ARG PLAYWRIGHT_VERSION="1.50.1"
+ARG OS_VERSION_NAME="noble"
 
-LABEL org.opencontainers.image.source https://github.com/mt-ag/lct-playwright-image
+FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-${OS_VERSION_NAME}
+
+LABEL org.opencontainers.image.source=https://github.com/mt-ag/lct-playwright-image
 
 # Playwright Installation
 RUN mkdir -p /app/workdir && \
     cd /app && \
     npm config set --global update-notifier false && \
-    npm install -y -D @playwright/test@1.50.1 && \
-    npx -y playwright install --with-deps && \
+    npm install -y @playwright/test && \
+    npx -y playwright@${PLAYWRIGHT_VERSION} install --with-deps && \
     chown pwuser:pwuser /app && \
     chmod -R 777 /app
 
 WORKDIR /app/workdir
 
-ENTRYPOINT ["npx", "playwright", "test", "test.spec.js"]
+ENTRYPOINT ["bash", "run.sh"]

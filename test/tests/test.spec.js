@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test.describe("Go to example.com", () => {
   test("should open example.com", async ({ page }) => {
     await page.goto("https://example.com");
-    await page.screenshot({ path: "example.png" });
+    await page.screenshot({ path: "./screenshots/example.png" });
   });
 
   test("should have header", async ({ page }) => {
