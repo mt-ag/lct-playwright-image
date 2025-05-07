@@ -3,6 +3,15 @@
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 
+// eslint-disable-next-line no-control-regex
+const ansiEscapeCodes = /\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])/g;
+function removeColorSequences(inputString) {
+  // Regular expression to match ANSI escape codes
+
+  // Replace the matched ANSI escape codes with an empty string
+  return inputString.replace(ansiEscapeCodes, '');
+}
+
 function getStatusEmoji(status) {
   switch (status) {
     case 'passed':
@@ -44,7 +53,9 @@ class MyReporter {
     );
 
     if (result?.error?.message) {
-      console.log(`Case error log:\n${result.error.message}\n\n\n`);
+      console.log(
+        `Case error log:\n${removeColorSequences(result.error.message)}\n\n\n`
+      );
     }
   }
 
@@ -59,21 +70,23 @@ class MyReporter {
   onStepEnd(test, result, step) {
     let title = step.title;
 
-    if (title.includes('Screenshot on failure')) {
-      title = title.replace(
-        'Screenshot on failure',
-        '🚨 Screenshot on failure 🚨'
-      );
+    if (step.error) {
+      console.log(`/* |> Step Error */`);
     }
 
     console.log(
       `    ${!step.error ? '✅' : '❌'} ${title} (${step.duration} ms)`
     );
 
-    if (step.error) {
-      console.log(`    ${step.error.message}`);
+    if (step?.error?.message) {
+      console.log(`    ${removeColorSequences(step.error.message)}`);
     }
   }
+
+  onStdOut(chunk, test, result) {
+    console.log(`/* |> ${chunk.toString().replaceAll('\n', '')} */`);
+  }
+
 }
 
 module.exports = MyReporter;
